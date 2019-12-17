@@ -117,7 +117,7 @@
     <orderEntry type="library" name="Gradle: com.firebaseui:firebase-ui-database:2.1.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database:11.0.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-storage:11.0.2@aar" level="project" />
-    <orderEntry type="library" name="Gradle: de.hdodenhof:circleimageview:2.2.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: de.hdodenhof:circleimageview:3.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-auth-base:11.0.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-base:11.0.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database-connection:11.0.2@aar" level="project" />
