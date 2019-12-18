@@ -109,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.nav_Logout:
-                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT ).show();
+                mAuth.signOut();
+                SendUsertoLoginActivity();
                 break;
         }
     }
