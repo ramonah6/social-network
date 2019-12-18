@@ -184,7 +184,7 @@ public class SetupActivity extends AppCompatActivity {
             userMap.put("username", username);
             userMap.put("fullname", fullname);
             userMap.put("country", country);
-            userMap.put("status", "Hey there, I am using Poster Social Network, developed by Coding Cafe");
+            userMap.put("status", "none");
             userMap.put("gender", "none");
             userMap.put("dob", "none");
             userMap.put("relationshipstatus", "none");
