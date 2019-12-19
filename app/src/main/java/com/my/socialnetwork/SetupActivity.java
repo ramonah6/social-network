@@ -82,12 +82,31 @@ public class SetupActivity extends AppCompatActivity {
             }
         });
 
-        UserProfileImageRef.child(currentUserID + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        UsersRef.addValueEventListener((new ValueEventListener() {
             @Override
-            public void onSuccess(Uri uri) {
-                Picasso.with(SetupActivity.this).load(uri).placeholder(R.drawable.profile).into(ProfileImage);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.hasChild("profileimage")) {
+                        UserProfileImageRef.child(currentUserID + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Picasso.with(SetupActivity.this).load(uri).placeholder(R.drawable.profile).into(ProfileImage);
+                            }
+                        });
+                    }
+                    else {
+                        Toast.makeText(SetupActivity.this,"Please select profile image first...",Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
-        });
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        }));
+
+
     }
 
     @Override
