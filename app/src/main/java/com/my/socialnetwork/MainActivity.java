@@ -1,5 +1,6 @@
 package com.my.socialnetwork;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -12,13 +13,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.database.SnapshotParser;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,10 +54,11 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton AddNewPostButton;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef;
+    private DatabaseReference UsersRef, PostsRef;
     private StorageReference UserProfileImageRef;
 
     String currentUserID;
+    private FirebaseRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+
         UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
         mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
@@ -137,7 +146,81 @@ public class MainActivity extends AppCompatActivity {
 
     private void DisplayAllUsersPosts()
     {
+        FirebaseRecyclerOptions<Posts> options =
+                new FirebaseRecyclerOptions.Builder<Posts>()
+                        .setQuery(UsersRef, Posts.class)
+                        .build();
 
+        adapter = new FirebaseRecyclerAdapter<Posts, PostsViewHolder>(options){
+            @Override
+            protected void onBindViewHolder(@NonNull PostsViewHolder holder, int position, @NonNull Posts model) {
+                holder.setFullname(model.getFullname());
+                holder.setTime(model.getTime());
+                holder.setDate(model.getDate());
+                holder.setDescription(model.getDescription());
+                holder.setProfileimage(getApplicationContext(), model.getProfileimage());
+                holder.setPostimage(getApplicationContext(), model.getPostimage());
+            }
+
+            @Override
+            public PostsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                // Create a new instance of the ViewHolder, in this case we are using a custom
+                // layout called R.layout.message for each item
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.all_post_layout, parent, false);
+
+                return new PostsViewHolder(view);
+            }
+        };
+
+        postList.setAdapter(adapter);
+    }
+
+    public static class PostsViewHolder extends RecyclerView.ViewHolder
+    {
+        View mView;
+
+        public PostsViewHolder(View itemView)
+        {
+            super(itemView);
+            mView = itemView;
+        }
+
+        public void setFullname(String fullname)
+        {
+            TextView username = (TextView) mView.findViewById(R.id.post_user_name);
+            username.setText(fullname);
+        }
+
+        public void setProfileimage(Context ctx, String profileimage)
+        {
+            CircleImageView image = (CircleImageView) mView.findViewById(R.id.post_profile_image);
+            Picasso.with(ctx).load(profileimage).into(image);
+        }
+
+        public void setTime(String time)
+        {
+            TextView PostTime = (TextView) mView.findViewById(R.id.post_time);
+            PostTime.setText("    " + time);
+        }
+
+        public void setDate(String date)
+        {
+            TextView PostDate = (TextView) mView.findViewById(R.id.post_date);
+            PostDate.setText("    " + date);
+        }
+
+        public void setDescription(String description)
+        {
+            TextView PostDescription = (TextView) mView.findViewById(R.id.post_description);
+            PostDescription.setText(description);
+        }
+
+        public void setPostimage(Context ctx1, String postimage)
+        {
+            ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
+            Picasso.with(ctx1).load(postimage).into(PostImage);
+        }
     }
 
     private void SendUserToPostActivity() {
@@ -156,6 +239,14 @@ public class MainActivity extends AppCompatActivity {
         else {
             CheckUserExistence();
         }
+
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
     private void CheckUserExistence() {
