@@ -83,3 +83,5 @@ social-network.iml
 .idea/
 .grade/
 .DS_Store
+.idea/*
+.grade/*
