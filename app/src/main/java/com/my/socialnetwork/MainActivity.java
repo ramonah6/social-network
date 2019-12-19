@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         NavProfileImage = (CircleImageView)navView.findViewById(R.id.nav_profile_image);
         NavProfileUserName = (TextView)navView.findViewById(R.id.nav_user_full_name);
 
+
         UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -135,8 +136,7 @@ public class MainActivity extends AppCompatActivity {
         DisplayAllUsersPosts();
     }
 
-    private void DisplayAllUsersPosts()
-    {
+    private void DisplayAllUsersPosts() {
 
     }
 
