@@ -76,8 +76,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    String fullname = dataSnapshot.child("fullname").getValue().toString();
-                    NavProfileUserName.setText(fullname);
+                    if (dataSnapshot.hasChild("fullname")) {
+                        String fullname = dataSnapshot.child("fullname").getValue().toString();
+                        NavProfileUserName.setText(fullname);
+                    }
+
+                    if(dataSnapshot.hasChild(("profileimage"))) {
+                        UserProfileImageRef.child(currentUserID + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Picasso.with(MainActivity.this).load(uri).placeholder(R.drawable.profile).into(NavProfileImage);
+                            }
+                        });
+                    }
+                    else {
+                        Toast.makeText(MainActivity.this,"Profile name do not exists...",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -87,12 +101,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        UserProfileImageRef.child(currentUserID + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.with(MainActivity.this).load(uri).placeholder(R.drawable.profile).into(NavProfileImage);
-            }
-        });
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
