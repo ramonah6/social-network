@@ -17,7 +17,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="30dp"
         android:layout_marginRight="10dp"
-        android:scaleType="centerInside"
         app:srcCompat="@drawable/select_image" />
 
     <TextView
@@ -27,10 +26,11 @@
         android:layout_below="@+id/click_post_image"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="1dp"
         android:layout_marginRight="10dp"
-        android:padding="8dp"
+        android:padding="5dp"
         android:text="Post description..."
+        android:background="@drawable/inputs"
         android:textSize="20sp"
         android:textStyle="bold" />
 
