@@ -3,6 +3,7 @@ package com.my.socialnetwork;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -279,6 +280,11 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    private void SendUsertoSettingActivity() {
+        Intent settingsIntent =  new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(settingsIntent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -315,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.nav_settings:
-                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT ).show();
+                SendUsertoSettingActivity();
                 break;
 
             case R.id.nav_Logout:
