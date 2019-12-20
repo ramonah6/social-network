@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,7 +62,7 @@ public class PostActivity extends AppCompatActivity {
 
         SelectPostImage = (ImageButton)findViewById(R.id.select_post_image);
         UpdatePostButton = (Button)findViewById(R.id.update_post_button);
-        PostDescription = (EditText)findViewById(R.id.post_description);
+        PostDescription = (EditText)findViewById(R.id.click_post_description);
         loadingBar = new ProgressDialog(this);
 
         mToolbar = (Toolbar)findViewById(R.id.update_post_page_toolbar);

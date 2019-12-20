@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -211,13 +210,13 @@ public class MainActivity extends AppCompatActivity {
 
         public void setDescription(String description)
         {
-            TextView PostDescription = (TextView) mView.findViewById(R.id.post_description);
+            TextView PostDescription = (TextView) mView.findViewById(R.id.click_post_description);
             PostDescription.setText(description);
         }
 
         public void setPostimage(Context ctx1, String postimage)
         {
-            ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
+            ImageView PostImage = (ImageView) mView.findViewById(R.id.click_post_image);
             Picasso.with(ctx1).load(postimage).into(PostImage);
         }
     }
