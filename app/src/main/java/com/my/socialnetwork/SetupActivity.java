@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -142,17 +143,58 @@ public class SetupActivity extends AppCompatActivity {
 
                 final UploadTask uploadTask = filePath.putFile(resultUri);
 
-                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task)
+//                    {
+//                        if(task.isSuccessful())
+//                        {
+//                            Toast.makeText(SetupActivity.this, "Profile Image stored successfully to Firebase storage...", Toast.LENGTH_SHORT).show();
+//
+//                            final String downloadUrl = filePath.getDownloadUrl().toString();
+//
+//                            UsersRef.child("profileimage").setValue(downloadUrl)
+//                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<Void> task)
+//                                        {
+//                                            if(task.isSuccessful())
+//                                            {
+//                                                Intent selfIntent = new Intent(SetupActivity.this, SetupActivity.class);
+//                                                startActivity(selfIntent);
+//
+//                                                Toast.makeText(SetupActivity.this, "Profile Image stored to Firebase Database Successfully...", Toast.LENGTH_SHORT).show();
+//                                                loadingBar.dismiss();
+//                                            }
+//                                            else
+//                                            {
+//                                                String message = task.getException().getMessage();
+//                                                Toast.makeText(SetupActivity.this, "Error Occured: " + message, Toast.LENGTH_SHORT).show();
+//                                                loadingBar.dismiss();
+//                                            }
+//                                        }
+//                                    });
+//                        }
+//                    }
+//                });
+
+                uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
-                    public void onComplete(@NonNull final Task<UploadTask.TaskSnapshot> task)
-                    {
-                        if(task.isSuccessful())
-                        {
-                            Toast.makeText(SetupActivity.this, "Profile Image stored successfully to Firebase storage...", Toast.LENGTH_SHORT).show();
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (!task.isSuccessful()) {
+                            String message = task.getException().getMessage();
+                            Toast.makeText(SetupActivity.this, "Error Occured: " + message, Toast.LENGTH_SHORT).show();
+                            loadingBar.dismiss();
+                        }
 
-                            final String downloadUrl = filePath.getDownloadUrl().toString();
-
-                            UsersRef.child("profileimage").setValue(downloadUrl)
+                        return filePath.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
+                            UsersRef.child("profileimage").setValue(downloadUri.getPath())
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task)
@@ -173,6 +215,7 @@ public class SetupActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
+
                         }
                     }
                 });

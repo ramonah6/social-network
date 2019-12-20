@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,6 +50,9 @@ public class PostActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id;
 
+    private StorageReference UserProfileImageRef;
+    String pf;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +60,15 @@ public class PostActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         current_user_id = mAuth.getUid();
+
+        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
+        UserProfileImageRef.child(current_user_id + ".jpg").getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        pf = uri.toString();
+                    }
+                });
 
         PostImagesRefrence = FirebaseStorage.getInstance().getReference();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -155,11 +169,11 @@ public class PostActivity extends AppCompatActivity {
 
                    HashMap postMap = new HashMap();
                    postMap.put("uid", current_user_id);
-                   postMap.put("data", saveCurrentDate);
+                   postMap.put("date", saveCurrentDate);
                    postMap.put("time", saveCurrentTime);
                    postMap.put("description", Description);
                    postMap.put("postimage", downloadUrl);
-                   postMap.put("profileimage", userProfileImage);
+                   postMap.put("profileimage", pf);
                    postMap.put("fullname", userFullName);
                    PostsRef.child(current_user_id + postRandomName).updateChildren(postMap)
                            .addOnCompleteListener(new OnCompleteListener() {
@@ -210,7 +224,15 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void SendUserToMainActivity() {
-        Intent mainInent = new Intent(PostActivity.this, MainActivity.class);
-        startActivity(mainInent);
+        PostImagesRefrence.child("Post Images").child(ImageUri.getLastPathSegment()+postRandomName+".jpg")
+                .getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        PostsRef.child(current_user_id + postRandomName).child("postimage").setValue(uri.toString());
+                        Intent mainInent = new Intent(PostActivity.this, MainActivity.class);
+                        startActivity(mainInent);
+                    }
+                });
     }
 }

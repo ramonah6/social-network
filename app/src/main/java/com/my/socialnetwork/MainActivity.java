@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
     {
         FirebaseRecyclerOptions<Posts> options =
                 new FirebaseRecyclerOptions.Builder<Posts>()
-                        .setQuery(UsersRef, Posts.class)
+                        .setQuery(PostsRef, Posts.class)
                         .build();
 
         adapter = new FirebaseRecyclerAdapter<Posts, PostsViewHolder>(options){
