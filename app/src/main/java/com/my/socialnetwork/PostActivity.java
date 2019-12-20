@@ -156,7 +156,7 @@ public class PostActivity extends AppCompatActivity {
 
                    HashMap postMap = new HashMap();
                    postMap.put("uid", current_user_id);
-                   postMap.put("data", saveCurrentDate);
+                   postMap.put("date", saveCurrentDate);
                    postMap.put("time", saveCurrentTime);
                    postMap.put("description", Description);
                    postMap.put("postimage", downloadUrl);
