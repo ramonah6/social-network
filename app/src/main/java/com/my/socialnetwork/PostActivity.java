@@ -167,15 +167,6 @@ public class PostActivity extends AppCompatActivity {
                    String userFullName = dataSnapshot.child("fullname").getValue().toString();
                    String userProfileImage = dataSnapshot.child("profileimage").getValue().toString();
 
-//                   PostImagesRefrence.child("Post Images").child(ImageUri.getLastPathSegment()+postRandomName+".jpg")
-//                           .getDownloadUrl()
-//                           .addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                               @Override
-//                               public void onSuccess(Uri uri) {
-//                                   downloadUrl = uri.toString();
-//                               }
-//                           });
-
                    HashMap postMap = new HashMap();
                    postMap.put("uid", current_user_id);
                    postMap.put("date", saveCurrentDate);
@@ -233,7 +224,15 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void SendUserToMainActivity() {
-        Intent mainInent = new Intent(PostActivity.this, MainActivity.class);
-        startActivity(mainInent);
+        PostImagesRefrence.child("Post Images").child(ImageUri.getLastPathSegment()+postRandomName+".jpg")
+                .getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        PostsRef.child(current_user_id + postRandomName).child("postimage").setValue(uri.toString());
+                        Intent mainInent = new Intent(PostActivity.this, MainActivity.class);
+                        startActivity(mainInent);
+                    }
+                });
     }
 }
