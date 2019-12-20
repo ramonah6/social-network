@@ -81,7 +81,14 @@ local.properties
 local.properties
 social-network.iml
 .idea/
-.grade/
-.DS_Store
+.gradle/
+.DS_Store/*
 .idea/*
-.grade/*
+.gradle/*
+.gradle/5.4.1/executionHistory/executionHistory.bin
+.gradle/5.4.1/executionHistory/executionHistory.lock
+.gradle/5.4.1/fileHashes/fileHashes.bin
+.gradle/5.4.1/fileHashes/fileHashes.lock
+.gradle/5.4.1/javaCompile/classAnalysis.bin
+.gradle/5.4.1/javaCompile/javaCompile.lock
+app/.DS_Store
