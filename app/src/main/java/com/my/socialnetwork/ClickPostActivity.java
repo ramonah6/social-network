@@ -17,8 +17,8 @@ public class ClickPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_click_post);
 
-        PostImage = (ImageView)findViewById(R.id.post_image);
-        PostDescription = (TextView)findViewById(R.id.post_description);
+        PostImage = (ImageView)findViewById(R.id.click_post_image);
+        PostDescription = (TextView)findViewById(R.id.click_post_description);
         DeletePostButton = (Button)findViewById(R.id.delete_post_button);
         EditPostButton = (Button)findViewById(R.id.edit_post_button);
     }
