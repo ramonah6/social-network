@@ -242,7 +242,7 @@ public class SettingsActivity extends AppCompatActivity {
             loadingBar.setMessage("Please wait, while we updating your profile image...");
             loadingBar.setCanceledOnTouchOutside(true);
             loadingBar.show();
-
+            
             UpdateAccountInfo(username, profilename, status, dob, country, gender, relation);
         }
     }
