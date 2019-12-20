@@ -36,6 +36,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -153,12 +155,23 @@ public class MainActivity extends AppCompatActivity {
         adapter = new FirebaseRecyclerAdapter<Posts, PostsViewHolder>(options){
             @Override
             protected void onBindViewHolder(@NonNull PostsViewHolder holder, int position, @NonNull Posts model) {
+                final String PostKey = getRef(position).getKey();
+
                 holder.setFullname(model.getFullname());
                 holder.setTime(model.getTime());
                 holder.setDate(model.getDate());
                 holder.setDescription(model.getDescription());
                 holder.setProfileimage(getApplicationContext(), model.getProfileimage());
                 holder.setPostimage(getApplicationContext(), model.getPostimage());
+
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent clickPostIntent = new Intent(MainActivity.this, ClickPostActivity.class);
+                        clickPostIntent.putExtra("PostKey", PostKey);
+                        startActivity(clickPostIntent);
+                    }
+                });
             }
 
             @Override
