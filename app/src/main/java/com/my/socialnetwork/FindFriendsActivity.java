@@ -1,14 +1,13 @@
 package com.my.socialnetwork;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -47,8 +45,7 @@ public class FindFriendsActivity extends AppCompatActivity {
         mToolBar = (Toolbar)findViewById(R.id.find_friends_appbar_layout);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Update Post");
+        getSupportActionBar().setTitle("Find Friends");
 
         SearchResultList = (RecyclerView)findViewById(R.id.search_result_list);
         SearchResultList.setHasFixedSize(true);
@@ -57,6 +54,7 @@ public class FindFriendsActivity extends AppCompatActivity {
         SearchButton = (ImageButton)findViewById(R.id.search_people_friends_button);
         SearchInputText = (EditText)findViewById(R.id.search_box_input);
 
+        SearchPeopleFriends("ariana");
         SearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,35 +64,79 @@ public class FindFriendsActivity extends AppCompatActivity {
         });
     }
 
-    private void SearchPeopleFriends(String searchBoxInput) {
-        Toast.makeText(this, "Searching...", Toast.LENGTH_SHORT).show();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseRecyclerAdapter.startListening();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firebaseRecyclerAdapter.startListening();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void SearchPeopleFriends(String searchBoxInput)
+    {
+//        allUsersDatabaseRef.orderByChild("fullname").startAt(searchBoxInput).endAt(searchBoxInput + "\uf8ff")
+//            .addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Toast.makeText(FindFriendsActivity.this,dataSnapshot.toString(), Toast.LENGTH_LONG ).show();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
         Query searchPeopleandFriendQuery = allUsersDatabaseRef.orderByChild("fullname")
-                .startAt(searchBoxInput).endAt(searchBoxInput + "\uf0ff");
+                .startAt(searchBoxInput).endAt(searchBoxInput + "\uf8ff");
 
         FirebaseRecyclerOptions<FindFriends> options =
                 new FirebaseRecyclerOptions.Builder<FindFriends>()
-                        .setQuery(allUsersDatabaseRef, FindFriends.class)
+                        .setQuery(searchPeopleandFriendQuery, FindFriends.class)
                         .build();
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<FindFriends, FindFriendsViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull FindFriendsViewHolder holder, int position, @NonNull FindFriends model) {
+            protected void onBindViewHolder(@NonNull FindFriendsViewHolder holder, final int position, @NonNull FindFriends model) {
                 holder.setFullname(model.getFullname());
-                holder.setFullname(model.getStatus());
+                holder.setStatus(model.getStatus());
                 holder.setProfileimage(getApplicationContext(), model.getProfileimage());
+                Toast.makeText(FindFriendsActivity.this,model.getFullname(), Toast.LENGTH_LONG ).show();
+
+
+//                holder.mView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        String visit_user_id = getRef(position).getKey();
+//
+//                        Intent profileIntent = new Intent(FindFriendsActivity.this, ProfileActivity.class);
+//                        profileIntent.putExtra("visit_user_id", visit_user_id);
+//                        startActivity(profileIntent);
+//                    }
+//                });
             }
 
-            @NonNull
             @Override
-            public FindFriendsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public FindFriendsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.all_post_layout, parent, false);
+                        .inflate(R.layout.all_users_display_layout, parent, false);
 
                 return new FindFriendsViewHolder(view);
             }
         };
 
         SearchResultList.setAdapter(firebaseRecyclerAdapter);
+
     }
 
     public static class FindFriendsViewHolder extends RecyclerView.ViewHolder {
