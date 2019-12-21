@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,12 +55,12 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton AddNewPostButton;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef, PostsRef;
+    private DatabaseReference UsersRef, PostsRef, LikesRef;
     private StorageReference UserProfileImageRef;
 
     String currentUserID;
     private FirebaseRecyclerAdapter adapter;
-
+    Boolean LikeChecker = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+        LikesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
 
         UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
@@ -163,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 holder.setProfileimage(getApplicationContext(), model.getProfileimage());
                 holder.setPostimage(getApplicationContext(), model.getPostimage());
 
+                holder.setLikeButtonStatus(PostKey);
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -171,6 +174,39 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(clickPostIntent);
                     }
                 });
+
+                holder.LikePostButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        LikeChecker = true;
+
+                        LikesRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(LikeChecker == true)
+                                {
+                                    if(dataSnapshot.child(PostKey).hasChild(currentUserID))
+                                    {
+                                        LikesRef.child(PostKey).child(currentUserID).removeValue();
+                                        LikeChecker = false;
+                                    }
+                                    else
+                                    {
+                                        LikesRef.child(PostKey).child(currentUserID).setValue(true);
+                                        LikeChecker = false;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
+
             }
 
             @Override
@@ -191,10 +227,49 @@ public class MainActivity extends AppCompatActivity {
     {
         View mView;
 
+        ImageButton LikePostButton, CommentPostButton;
+        TextView DisplayNoOfLikes;
+        int countLikes;
+        String currentUserID;
+        DatabaseReference LikesRef;
+
         public PostsViewHolder(View itemView)
         {
             super(itemView);
             mView = itemView;
+
+            LikePostButton = (ImageButton) mView.findViewById(R.id.like_button);
+            CommentPostButton = (ImageButton) mView.findViewById(R.id.comment_button);
+            DisplayNoOfLikes = (TextView) mView.findViewById(R.id.dislike_no_of_like);
+
+            LikesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
+            currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
+
+        public void setLikeButtonStatus(final String PostKey)
+        {
+            LikesRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.child(PostKey).hasChild(currentUserID))
+                    {
+                        countLikes = (int) dataSnapshot.child(PostKey).getChildrenCount();
+                        LikePostButton.setImageResource(R.drawable.like);
+                        DisplayNoOfLikes.setText((Integer.toString(countLikes) + " Likes"));
+                    }
+                    else
+                    {
+                        countLikes = (int) dataSnapshot.child(PostKey).getChildrenCount();
+                        LikePostButton.setImageResource(R.drawable.dislike);
+                        DisplayNoOfLikes.setText((Integer.toString(countLikes) + " Likes"));
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
 
         public void setFullname(String fullname)
