@@ -3,7 +3,6 @@ package com.my.socialnetwork;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -227,6 +226,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(addNewPostIntent);
     }
 
+    private void SendUserToprofileActivity() {
+        Intent addNewProIntent = new Intent(MainActivity.this, ProfileActivity.class);
+        startActivity(addNewProIntent);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -301,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.nav_profile:
-                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT ).show();
+                SendUserToprofileActivity();
                 break;
 
             case R.id.nav_home:
