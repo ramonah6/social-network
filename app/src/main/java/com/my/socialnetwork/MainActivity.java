@@ -302,6 +302,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(settingsIntent);
     }
 
+    private void SendUsertoFindfriendsActivity() {
+        Intent settingsIntent =  new Intent(MainActivity.this, FindFriendsActivity.class);
+        startActivity(settingsIntent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -330,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.nav_find_friends:
-                Toast.makeText(this, "Find Friends", Toast.LENGTH_SHORT ).show();
+                SendUsertoFindfriendsActivity();
                 break;
 
             case R.id.nav_messages:

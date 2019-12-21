@@ -50,9 +50,6 @@ public class PostActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String saveCurrentDate, saveCurrentTime, postRandomName, downloadUrl, current_user_id;
 
-    private StorageReference UserProfileImageRef;
-    String pf;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,15 +57,6 @@ public class PostActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         current_user_id = mAuth.getUid();
-
-        UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
-        UserProfileImageRef.child(current_user_id + ".jpg").getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        pf = uri.toString();
-                    }
-                });
 
         PostImagesRefrence = FirebaseStorage.getInstance().getReference();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -173,7 +161,7 @@ public class PostActivity extends AppCompatActivity {
                    postMap.put("time", saveCurrentTime);
                    postMap.put("description", Description);
                    postMap.put("postimage", downloadUrl);
-                   postMap.put("profileimage", pf);
+                   postMap.put("profileimage", userProfileImage);
                    postMap.put("fullname", userFullName);
                    PostsRef.child(current_user_id + postRandomName).updateChildren(postMap)
                            .addOnCompleteListener(new OnCompleteListener() {
