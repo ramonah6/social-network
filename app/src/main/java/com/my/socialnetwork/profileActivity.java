@@ -18,6 +18,7 @@ public class profileActivity extends AppCompatActivity {
     private DatabaseReference profileUserRef;
     private FirebaseAuth mAuth;
 
+    
     private String currentUserid;
 
     @Override
