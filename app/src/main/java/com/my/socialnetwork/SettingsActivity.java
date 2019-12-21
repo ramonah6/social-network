@@ -275,6 +275,15 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void SendUserToMainActivity() {
+        UserProfileImageRef.child(currentUserid + ".jpg")
+                .getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        SettingsuserRef.child("profileimage").setValue(uri.toString());
+                    }
+                });
+
         Intent mainIntent = new Intent(SettingsActivity.this, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
