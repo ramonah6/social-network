@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
 import android.view.LayoutInflater;
@@ -17,10 +18,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -28,13 +34,13 @@ public class FindFriendsActivity extends AppCompatActivity {
 
     private Toolbar mToolBar;
     private ImageButton SearchButton;
-    private EditText SearchInputText;
+//    private EditText SearchInputText;
+    private SearchView SearchInputText;
 
     private RecyclerView SearchResultList;
-
     private DatabaseReference allUsersDatabaseRef;
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
-
+    ArrayList<FindFriends> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,52 +57,90 @@ public class FindFriendsActivity extends AppCompatActivity {
         SearchResultList.setHasFixedSize(true);
         SearchResultList.setLayoutManager(new LinearLayoutManager(this));
 
-        SearchButton = (ImageButton)findViewById(R.id.search_people_friends_button);
-        SearchInputText = (EditText)findViewById(R.id.search_box_input);
+//        SearchButton = (ImageButton)findViewById(R.id.search_people_friends_button);
+//        SearchInputText = (EditText)findViewById(R.id.search_box_input);
+        SearchInputText = (SearchView) findViewById(R.id.search_box_input);
 
-        SearchPeopleFriends("ariana");
-        SearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String searchBoxInput = SearchInputText.getText().toString();
-                SearchPeopleFriends(searchBoxInput);
-            }
-        });
+        SearchPeopleFriends("ari");
+//        SearchButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String searchBoxInput = SearchInputText.getText().toString();
+//                SearchPeopleFriends(searchBoxInput);
+//            }
+//        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        if(allUsersDatabaseRef != null)
+        {
+            allUsersDatabaseRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists())
+                    {
+                        list = new ArrayList<FindFriends>();
+                        for(DataSnapshot ds: dataSnapshot.getChildren())
+                        {
+                            list.add(ds.getValue(FindFriends.class));
+                        }
+                        AdapterClass adapterClass = new AdapterClass(list, getApplicationContext());
+                        SearchResultList.setAdapter(adapterClass);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+        if(SearchInputText != null)
+        {
+            SearchInputText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    search(newText);
+                    return true;
+                }
+            });
+        }
+
         firebaseRecyclerAdapter.startListening();
 
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        firebaseRecyclerAdapter.startListening();
+    protected void onStop() {
+        super.onStop();
+        firebaseRecyclerAdapter.stopListening();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    private void search(String str)
+    {
+        ArrayList<FindFriends> myList = new ArrayList<>();
+        for(FindFriends ob: list)
+        {
+            if(ob.fullname.toLowerCase().contains(str.toLowerCase()))
+            {
+                myList.add(ob);
+            }
+        }
+        AdapterClass adapterClass = new AdapterClass(myList, getApplicationContext());
+        SearchResultList.setAdapter(adapterClass);
     }
 
     private void SearchPeopleFriends(String searchBoxInput)
     {
-//        allUsersDatabaseRef.orderByChild("fullname").startAt(searchBoxInput).endAt(searchBoxInput + "\uf8ff")
-//            .addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                Toast.makeText(FindFriendsActivity.this,dataSnapshot.toString(), Toast.LENGTH_LONG ).show();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
         Query searchPeopleandFriendQuery = allUsersDatabaseRef.orderByChild("fullname")
                 .startAt(searchBoxInput).endAt(searchBoxInput + "\uf8ff");
 
@@ -162,4 +206,6 @@ public class FindFriendsActivity extends AppCompatActivity {
             myStatus.setText(status);
         }
     }
+
 }
+
