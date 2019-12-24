@@ -36,13 +36,13 @@ public class ProfileActivity extends AppCompatActivity {
         profileUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserid);
 
 
-        userName = (TextView)findViewById(R.id.person_username);
-        userProfName= (TextView)findViewById(R.id.person_full_name);
-        userStatus = (TextView)findViewById(R.id.person_profile_status);
-        userCountry = (TextView)findViewById(R.id.person_country);
-        userGender = (TextView)findViewById(R.id.person_gender);
-        userRelation = (TextView)findViewById(R.id.person_relationship);
-        userDOB = (TextView)findViewById(R.id.person_dob);
+        userName = (TextView)findViewById(R.id.my_username);
+        userProfName= (TextView)findViewById(R.id.my_full_name);
+        userStatus = (TextView)findViewById(R.id.my_profile_status);
+        userCountry = (TextView)findViewById(R.id.my_country);
+        userGender = (TextView)findViewById(R.id.my_gender);
+        userRelation = (TextView)findViewById(R.id.my_relationship);
+        userDOB = (TextView)findViewById(R.id.my_dob);
         userProfileImage = (CircleImageView)findViewById(R.id.my_profile_pic);
 
         profileUserRef.addValueEventListener(new ValueEventListener() {

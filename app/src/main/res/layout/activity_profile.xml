@@ -27,7 +27,7 @@
                 android:src="@drawable/profile"/>
 
             <TextView
-                android:id="@+id/person_full_name"
+                android:id="@+id/my_full_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Profile Name"
@@ -40,23 +40,23 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/person_username"
+                android:id="@+id/my_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="User Name"
                 android:layout_marginTop="10dp"
-                android:layout_below="@id/person_full_name"
+                android:layout_below="@id/my_full_name"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@android:color/background_light"
                 android:textSize="18sp" />
 
             <TextView
-            android:id="@+id/person_profile_status"
+            android:id="@+id/my_profile_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="I am doge!"
-            android:layout_below="@id/person_username"
+            android:layout_below="@id/my_username"
             android:textAlignment="center"
             android:layout_marginTop="10dp"
             android:textAllCaps="false"
@@ -64,11 +64,11 @@
             android:textSize="22sp" />
 
             <TextView
-                android:id="@+id/person_country"
+                android:id="@+id/my_country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Country"
-                android:layout_below="@id/person_profile_status"
+                android:layout_below="@id/my_profile_status"
                 android:textAlignment="center"
                 android:layout_marginTop="80dp"
                 android:textAllCaps="false"
@@ -76,11 +76,11 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/person_dob"
+                android:id="@+id/my_dob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Date of Birth"
-                android:layout_below="@id/person_country"
+                android:layout_below="@id/my_country"
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
                 android:textAllCaps="false"
@@ -88,11 +88,11 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/person_gender"
+                android:id="@+id/my_gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Gender"
-                android:layout_below="@id/person_dob"
+                android:layout_below="@id/my_dob"
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
                 android:textAllCaps="false"
@@ -100,11 +100,11 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/person_relationship"
+                android:id="@+id/my_relationship"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Relationship Status"
-                android:layout_below="@id/person_gender"
+                android:layout_below="@id/my_gender"
                 android:textAlignment="center"
                 android:layout_marginTop="5dp"
                 android:textAllCaps="false"
