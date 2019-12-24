@@ -6,13 +6,17 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.common.images.internal.PostProcessedResourceCache;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,6 +42,8 @@ public class CommentsActivity extends AppCompatActivity {
     private DatabaseReference UsersRef, PostsRef;
 
     private FirebaseAuth mAuth;
+
+    private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +90,68 @@ public class CommentsActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+        FirebaseRecyclerOptions<Comments> options =
+                new FirebaseRecyclerOptions.Builder<Comments>()
+                        .setQuery(PostsRef, Comments.class)
+                        .build();
+
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Comments, CommentsViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull CommentsViewHolder holder, int position, @NonNull Comments model) {
+                holder.setUsername(model.getUsername());
+                holder.setComment(model.getComment());
+                holder.setDate(model.getDate());
+                holder.setTime(model.getTime());
+            }
+
+            @NonNull
+            @Override
+            public CommentsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.all_comments_layout, parent, false);
+
+                return new CommentsViewHolder(view);
+            }
+        };
+
+        CommentListsts.setAdapter(firebaseRecyclerAdapter);
+    }
+
+    public static class CommentsViewHolder extends RecyclerView.ViewHolder {
+        View mView;
+
+        public CommentsViewHolder(View itemView) {
+            super(itemView);
+            mView = itemView;
+        }
+
+        public void setUsername(String username) {
+            TextView myUserName = (TextView) mView.findViewById(R.id.comment_username);
+            myUserName.setText("@" + username + "  ");
+        }
+
+        public void setComment(String comment) {
+            TextView myComment = (TextView) mView.findViewById(R.id.comment_text);
+            myComment.setText(comment);
+        }
+
+        public void setDate(String date) {
+            TextView myDate = (TextView) mView.findViewById(R.id.comment_date);
+            myDate.setText("Date: " + date);
+        }
+
+        public void setTime(String time) {
+            TextView myTime = (TextView) mView.findViewById(R.id.comment_time);
+            myTime.setText("Time: " + time);
+        }
+
     }
 
     private void ValidateComment(String userName) {
