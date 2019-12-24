@@ -3,6 +3,7 @@ package com.my.socialnetwork;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,37 +16,29 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends AppCompatActivity {
-
+public class PersonProfileActivity extends AppCompatActivity {
     private TextView userName, userProfName, userStatus, userCountry, userGender,userDOB, userRelation;
     private CircleImageView userProfileImage;
+    private Button SendFriendRquestButton, DeclineFriendRequestButton;
 
-    private DatabaseReference profileUserRef;
+    private DatabaseReference profileUserRef, UsersRef;
     private FirebaseAuth mAuth;
-
-
-    private String currentUserid;
+    private String senderUserid, receviverUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_person_profile);
 
         mAuth = FirebaseAuth.getInstance();
-        currentUserid = mAuth.getCurrentUser().getUid();
-        profileUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserid);
+        senderUserid = mAuth.getCurrentUser().getUid();
 
+        receviverUserId = getIntent().getExtras().get("visit)user_id").toString();
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        userName = (TextView)findViewById(R.id.my_username);
-        userProfName= (TextView)findViewById(R.id.my_full_name);
-        userStatus = (TextView)findViewById(R.id.my_profile_status);
-        userCountry = (TextView)findViewById(R.id.my_country);
-        userGender = (TextView)findViewById(R.id.my_gender);
-        userRelation = (TextView)findViewById(R.id.my_relationship);
-        userDOB = (TextView)findViewById(R.id.my_dob);
-        userProfileImage = (CircleImageView)findViewById(R.id.my_profile_pic);
+        intializeFields();
 
-        profileUserRef.addValueEventListener(new ValueEventListener() {
+        UsersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -58,7 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String myGender = dataSnapshot.child("gender").getValue().toString();
                     String myRelationStatus = dataSnapshot.child("relationshipstatus").getValue().toString();
 
-                    Picasso.with(ProfileActivity.this).load(myProfileImage).placeholder(R.drawable.profile).into(userProfileImage);
+                    Picasso.with(PersonProfileActivity.this).load(myProfileImage).placeholder(R.drawable.profile).into(userProfileImage);
                     userName.setText("@" + myUserName);
                     userProfName.setText(myProfileName);
                     userStatus.setText(myProfileStatus);
@@ -74,5 +67,18 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void intializeFields() {
+        userName = (TextView)findViewById(R.id.person_username);
+        userProfName= (TextView)findViewById(R.id.person_full_name);
+        userStatus = (TextView)findViewById(R.id.person_profile_status);
+        userCountry = (TextView)findViewById(R.id.person_country);
+        userGender = (TextView)findViewById(R.id.person_gender);
+        userRelation = (TextView)findViewById(R.id.person_relationship);
+        userDOB = (TextView)findViewById(R.id.person_dob);
+        userProfileImage = (CircleImageView)findViewById(R.id.person_profile_pic);
+        SendFriendRquestButton = (Button)findViewById(R.id.person_send_friend_request_btn);
+        DeclineFriendRequestButton = (Button)findViewById(R.id.person_decline_friend_request);
     }
 }

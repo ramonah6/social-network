@@ -1,6 +1,7 @@
 package com.my.socialnetwork;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -155,7 +156,18 @@ public class FindFriendsActivity extends AppCompatActivity {
                 holder.setFullname(model.getFullname());
                 holder.setStatus(model.getStatus());
                 holder.setProfileimage(getApplicationContext(), model.getProfileimage());
-                Toast.makeText(FindFriendsActivity.this,model.getFullname(), Toast.LENGTH_LONG ).show();
+                //Toast.makeText(FindFriendsActivity.this,model.getFullname(), Toast.LENGTH_LONG ).show();
+
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String visit_user_id = getRef(position).getKey();
+
+                        Intent profileIntent = new Intent (FindFriendsActivity.this, PersonProfileActivity.class);
+                        profileIntent.putExtra("visit_user_id", visit_user_id);
+                        startActivity(profileIntent);
+                    }
+                });
 
 
 //                holder.mView.setOnClickListener(new View.OnClickListener() {
