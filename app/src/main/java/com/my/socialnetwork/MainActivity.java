@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, PostsRef, LikesRef;
     private StorageReference UserProfileImageRef;
+    private DatabaseReference CommentsRef;
 
     String currentUserID;
     private FirebaseRecyclerAdapter adapter;
