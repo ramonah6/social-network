@@ -427,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.nav_messages:
-                Toast.makeText(this, "Messages", Toast.LENGTH_SHORT ).show();
+//                SendUsertoFriendsActivity();
                 break;
 
             case R.id.nav_settings:
