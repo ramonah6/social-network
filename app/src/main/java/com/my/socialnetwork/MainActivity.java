@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SendUserToprofileActivity() {
-        Intent addNewProIntent = new Intent(MainActivity.this, ProfileActivity.class);
+        Intent addNewProIntent = new Intent(MainActivity.this, MyProfileActivity.class);
         startActivity(addNewProIntent);
     }
 
@@ -417,6 +417,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.nav_profile:
                 SendUserToprofileActivity();
+                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT ).show();
                 break;
 
             case R.id.nav_home:
