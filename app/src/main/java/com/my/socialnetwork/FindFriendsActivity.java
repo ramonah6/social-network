@@ -62,7 +62,7 @@ public class FindFriendsActivity extends AppCompatActivity {
 //        SearchInputText = (EditText)findViewById(R.id.search_box_input);
         SearchInputText = (SearchView) findViewById(R.id.search_box_input);
 
-        SearchPeopleFriends("ari");
+        search("");
 //        SearchButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
