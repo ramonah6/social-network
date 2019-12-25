@@ -1,6 +1,7 @@
 package com.my.socialnetwork;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,10 +33,20 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.FindFriendsV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdapterClass.FindFriendsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdapterClass.FindFriendsViewHolder holder, final int position) {
         holder.setFullname(list.get(position).getFullname());
         holder.setStatus(list.get(position).getStatus());
         holder.setProfileimage(ct, list.get(position).getProfileimage());
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String visit_user_id = list.get(position).userID;
+                Toast.makeText(ct,visit_user_id, Toast.LENGTH_LONG ).show();
+                Intent profileIntent = new Intent (ct, PersonProfileActivity.class);
+                profileIntent.putExtra("visit_user_id", visit_user_id);
+                ct.startActivity(profileIntent);
+            }
+        });
     }
 
     @Override

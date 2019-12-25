@@ -1,14 +1,23 @@
 package com.my.socialnetwork;
 
 public class FindFriends {
-    public String profileimage, fullname, status;
+    public String profileimage, fullname, status, userID;
 
     public FindFriends() {}
 
-    public FindFriends(String profileimage, String fullname, String status) {
+    public FindFriends(String profileimage, String fullname, String status, String userID) {
         this.profileimage = profileimage;
         this.fullname = fullname;
         this.status = status;
+        this.userID = userID;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getProfileimage() {

@@ -85,7 +85,8 @@ public class FindFriendsActivity extends AppCompatActivity {
                         list = new ArrayList<FindFriends>();
                         for(DataSnapshot ds: dataSnapshot.getChildren())
                         {
-                            list.add(ds.getValue(FindFriends.class));
+                            FindFriends ff = new FindFriends(ds.child("profileimage").getValue().toString(),ds.child("fullname").getValue().toString(),ds.child("status").getValue().toString(),ds.getKey());
+                            list.add(ff);
                         }
                         AdapterClass adapterClass = new AdapterClass(list, getApplicationContext());
                         SearchResultList.setAdapter(adapterClass);
@@ -195,7 +196,7 @@ public class FindFriendsActivity extends AppCompatActivity {
 
     }
 
-    public static class FindFriendsViewHolder extends RecyclerView.ViewHolder {
+    public static class FindFriendsViewHolder extends RecyclerView.ViewHolder{
         View mView;
 
         public FindFriendsViewHolder(View itemView) {
@@ -217,6 +218,7 @@ public class FindFriendsActivity extends AppCompatActivity {
             TextView myStatus = (TextView) mView.findViewById(R.id.all_users_status);
             myStatus.setText(status);
         }
+
     }
 
 }

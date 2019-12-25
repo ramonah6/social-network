@@ -33,12 +33,12 @@ public class PersonProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         senderUserid = mAuth.getCurrentUser().getUid();
 
-        receviverUserId = getIntent().getExtras().get("visit)user_id").toString();
+        receviverUserId = getIntent().getExtras().get("visit_user_id").toString();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        intializeFields();
+        IntializeFields();
 
-        UsersRef.addValueEventListener(new ValueEventListener() {
+        UsersRef.child(receviverUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -69,7 +69,7 @@ public class PersonProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void intializeFields() {
+    private void IntializeFields() {
         userName = (TextView)findViewById(R.id.person_username);
         userProfName= (TextView)findViewById(R.id.person_full_name);
         userStatus = (TextView)findViewById(R.id.person_profile_status);
