@@ -25,7 +25,9 @@
         android:id="@+id/friend_lists"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_below="@+id/all_friends"
-        android:layout_margin="15dp" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="44dp"
+        android:layout_marginBottom="15dp" />
 </RelativeLayout>

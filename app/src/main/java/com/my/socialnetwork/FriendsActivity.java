@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,12 +57,12 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
     private void DisplayAllFriends() {
-        FirebaseRecyclerOptions<Posts> options =
-                new FirebaseRecyclerOptions.Builder<Posts>()
-                        .setQuery(FriendsRef, Posts.class)
+        FirebaseRecyclerOptions<Friends> options =
+                new FirebaseRecyclerOptions.Builder<Friends>()
+                        .setQuery(FriendsRef, Friends.class)
                         .build();
 
-        adapter = new FirebaseRecyclerAdapter<Posts, FriendsViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<Friends, FriendsViewHolder>(options) {
             @NonNull
             @Override
             public FriendsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -72,7 +73,7 @@ public class FriendsActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull final FriendsViewHolder holder, int position, @NonNull Posts model) {
+            protected void onBindViewHolder(@NonNull final FriendsViewHolder holder, int position, @NonNull Friends model) {
                 holder.setDate(model.getDate());
                 final String usersIDs = getRef(position).getKey();
 
@@ -130,6 +131,18 @@ public class FriendsActivity extends AppCompatActivity {
 
         };
         myFriendsList.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder
