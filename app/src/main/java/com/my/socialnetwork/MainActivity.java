@@ -395,6 +395,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(settingsIntent);
     }
 
+    private void SendUsertoFriendsActivity() {
+        Intent settingsIntent =  new Intent(MainActivity.this, FriendsActivity.class);
+        startActivity(settingsIntent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -419,6 +424,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.nav_friends:
+                SendUsertoFriendsActivity();
                 Toast.makeText(this, "Friend List", Toast.LENGTH_SHORT ).show();
                 break;
 
@@ -427,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.nav_messages:
-//                SendUsertoFriendsActivity();
+                SendUsertoFriendsActivity();
                 break;
 
             case R.id.nav_settings:
