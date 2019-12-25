@@ -41,7 +41,7 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.FindFriendsV
             @Override
             public void onClick(View view) {
                 String visit_user_id = list.get(position).userID;
-                Toast.makeText(ct,visit_user_id, Toast.LENGTH_LONG ).show();
+                //Toast.makeText(ct,visit_user_id, Toast.LENGTH_LONG ).show();
                 Intent profileIntent = new Intent (ct, PersonProfileActivity.class);
                 profileIntent.putExtra("visit_user_id", visit_user_id);
                 ct.startActivity(profileIntent);
