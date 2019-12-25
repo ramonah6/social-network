@@ -3,6 +3,7 @@ package com.my.socialnetwork;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -23,7 +24,7 @@ public class PersonProfileActivity extends AppCompatActivity {
 
     private DatabaseReference profileUserRef, UsersRef;
     private FirebaseAuth mAuth;
-    private String senderUserid, receviverUserId;
+    private String senderUserid, receviverUserId, CURRENT_STATE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,24 @@ public class PersonProfileActivity extends AppCompatActivity {
 
             }
         });
+
+        DeclineFriendRequestButton.setVisibility(View.INVISIBLE);
+        DeclineFriendRequestButton.setEnabled(false);
+
+        if (!senderUserid.equals(receviverUserId)) {
+            SendFriendRquestButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SendFriendRquestButton.setEnabled(false);
+
+                    
+                }
+            });
+        }
+        else {
+            DeclineFriendRequestButton.setVisibility(View.INVISIBLE);
+            SendFriendRquestButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void IntializeFields() {
@@ -78,7 +97,10 @@ public class PersonProfileActivity extends AppCompatActivity {
         userRelation = (TextView)findViewById(R.id.person_relationship);
         userDOB = (TextView)findViewById(R.id.person_dob);
         userProfileImage = (CircleImageView)findViewById(R.id.person_profile_pic);
+
         SendFriendRquestButton = (Button)findViewById(R.id.person_send_friend_request_btn);
         DeclineFriendRequestButton = (Button)findViewById(R.id.person_decline_friend_request);
+
+        CURRENT_STATE = "not_friends";
     }
 }
