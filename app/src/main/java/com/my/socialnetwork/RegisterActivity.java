@@ -90,9 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
-                                SendUserToSetupActivity();
-
-                                Toast.makeText(RegisterActivity.this, "you are authenticated successfully...",Toast.LENGTH_SHORT).show();
+                                SendEmailVerificationMessage();
                                 loadingBar.dismiss();
                             }
                             else {
@@ -105,10 +103,36 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void SendUserToSetupActivity() {
-        Intent setupIntent = new Intent(RegisterActivity.this, SetupActivity.class);
-        setupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(setupIntent);
+    private void SendUserToLoginActivity() {
+        Intent LoginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+        LoginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(LoginIntent);
         finish();
+    }
+
+    private void SendEmailVerificationMessage()
+    {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if(user != null)
+        {
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful())
+                    {
+                        Toast.makeText(RegisterActivity.this, "Registration successful, we've sent you a mail. Please check and verify your account...", Toast.LENGTH_SHORT).show();
+                        SendUserToLoginActivity();
+                        mAuth.signOut();
+                    }
+                    else
+                    {
+                        String error = task.getException().getMessage();
+                        Toast.makeText(RegisterActivity.this, "Error: "+error, Toast.LENGTH_SHORT).show();
+                        mAuth.signOut();
+                    }
+                }
+            });
+        }
     }
 }

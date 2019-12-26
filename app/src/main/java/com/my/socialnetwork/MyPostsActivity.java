@@ -153,6 +153,7 @@ public class MyPostsActivity extends AppCompatActivity {
         };
 
         myPostList.setAdapter(adapter);
+
     }
     @Override
     protected void onStart() {
