@@ -31,7 +31,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private String messageReceiverID, messageReceiverName;
 
-    private TextView receiverName;
+    private TextView receiverName, userLastSeen;
     private CircleImageView receiverProfileImage;
 
     private DatabaseReference RootRef;
@@ -84,6 +84,7 @@ public class ChatActivity extends AppCompatActivity {
         actionBar.setCustomView(action_bar_view);
 
         receiverName = (TextView)findViewById(R.id.custom_profile_name);
+        userLastSeen = (TextView) findViewById(R.id.custom_user_last_seen);
         receiverProfileImage = (CircleImageView)findViewById(R.id.custom_profile_image);
 
         SendMessageButton = (ImageButton) findViewById(R.id.send_message_button);

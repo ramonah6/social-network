@@ -37,7 +37,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -234,6 +237,8 @@ public class MainActivity extends AppCompatActivity {
         };
 
         postList.setAdapter(adapter);
+
+        updateUserStatus("online");
     }
 
     public static class PostsViewHolder extends RecyclerView.ViewHolder
@@ -320,6 +325,28 @@ public class MainActivity extends AppCompatActivity {
             ImageView PostImage = (ImageView) mView.findViewById(R.id.click_post_image);
             Picasso.with(ctx1).load(postimage).into(PostImage);
         }
+    }
+
+    public  void updateUserStatus(String state)
+    {
+        String saveCurrentDate, saveCurrentTime;
+
+        Calendar calForDate = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calForDate.getTime());
+
+        Calendar calForTime = Calendar.getInstance();
+        SimpleDateFormat currentTime= new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calForTime.getTime());
+
+        Map currentMap = new HashMap<>();
+        currentMap.put("time", saveCurrentTime);
+        currentMap.put("date", saveCurrentDate);
+        currentMap.put("type", state);
+
+        UsersRef.child(currentUserID).child("userState")
+                .updateChildren(currentMap);
+
     }
 
     private void SendUserToPostActivity() {
@@ -441,6 +468,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.nav_Logout:
+                updateUserStatus("offline");
                 mAuth.signOut();
                 SendUsertoLoginActivity();
                 break;

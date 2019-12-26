@@ -22,7 +22,20 @@
         android:text="Display Username"
         android:textColor="@android:color/background_light"
         android:textSize="20sp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:id="@+id/custom_user_last_seen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="last seen"
+        android:layout_below="@id/custom_profile_name"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        android:layout_marginTop="25dp"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>

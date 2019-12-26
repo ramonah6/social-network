@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText UserEmail, UserPassword;
     private TextView NeedNewAccountLink, ForgetPasswordLink;
     private ProgressDialog loadingBar;
+    private Boolean emailAddressChecker;
 
     private FirebaseAuth mAuth;
 
@@ -164,6 +165,22 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void VerifyEmailAddress()
+    {
+        FirebaseUser user = mAuth.getCurrentUser();
+        emailAddressChecker = user.isEmailVerified();
+
+        if(emailAddressChecker)
+        {
+            SendUserToMainActivity();
+        }
+        else
+        {
+            Toast.makeText(this, "Please verify your Account first...", Toast.LENGTH_SHORT).show();
+            mAuth.signOut();
+        }
+    }
+
     private void SendUserToRegisterActivity() {
         Intent registerIntent = new Intent (LoginActivity.this, RegisterActivity.class);
         startActivity(registerIntent);
@@ -190,9 +207,8 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+//                                VerifyEmailAddress();
                                 SendUserToMainActivity();
-
-                                Toast.makeText(LoginActivity.this, "You are logged in successfully...", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
                             }
                             else {
