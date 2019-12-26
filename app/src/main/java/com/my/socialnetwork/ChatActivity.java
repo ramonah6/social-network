@@ -2,23 +2,39 @@ package com.my.socialnetwork;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.support.v7.widget.Toolbar;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -28,19 +44,26 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton SendMessageButton, SendImageFileButton;
     private EditText userMessageInput;
     private RecyclerView userMessageList;
+    private final List<Messages> messagesList = new ArrayList<>();
+    private LinearLayoutManager linearLayoutManager;
+    private MessageAdapter messageAdapter;
 
-    private String messageReceiverID, messageReceiverName;
+    private String messageReceiverID, messageReceiverName, messageSenderID, saveCurrentDate, saveCurrentTime;
 
     private TextView receiverName;
     private CircleImageView receiverProfileImage;
 
     private DatabaseReference RootRef;
+    private FirebaseAuth mAuth;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        mAuth = FirebaseAuth.getInstance();
+        messageSenderID = mAuth.getCurrentUser().getUid();
 
         RootRef = FirebaseDatabase.getInstance().getReference();
 
@@ -50,6 +73,101 @@ public class ChatActivity extends AppCompatActivity {
         InitializeFields();
 
         DisplayReceiverInfo();
+
+        SendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SendMessage();
+            }
+        });
+
+        FetchMessages();
+    }
+
+    private void FetchMessages() {
+        RootRef.child("Messages").child(messageSenderID).child(messageReceiverID)
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        if (dataSnapshot.exists()) {
+                            Messages messages = dataSnapshot.getValue(Messages.class);
+                            messagesList.add(messages);
+                            messageAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    private void SendMessage() {
+        String messageText = userMessageInput.getText().toString();
+
+        if (TextUtils.isEmpty(messageText)) {
+            Toast.makeText(this, "Please type a messge first...", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            String message_sender_ref = "Messages/" + messageSenderID + "/" + messageReceiverID;
+            String message_receiver_ref = "Messages/" + messageReceiverID + "/" + messageSenderID;
+
+            DatabaseReference user_message_key= RootRef.child("Messages").child(messageSenderID)
+                    .child(messageReceiverID).push();
+
+            String message_push_id = user_message_key.getKey();
+
+            final Calendar calForDate = Calendar.getInstance();
+            SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
+            saveCurrentDate = currentDate.format(calForDate.getTime());
+
+            Calendar calForTime = Calendar.getInstance();
+            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
+            saveCurrentTime= currentTime.format(calForTime.getTime());
+
+            Map messageTestBody = new HashMap();
+            messageTestBody.put("message", messageText);
+            messageTestBody.put("time", saveCurrentTime);
+            messageTestBody.put("date", saveCurrentDate);
+            messageTestBody.put("type", "text");
+            messageTestBody.put("from", messageSenderID);
+
+            Map messageBodyDetials = new HashMap();
+            messageBodyDetials.put(message_sender_ref + "/" + message_push_id, messageTestBody);
+            messageBodyDetials.put(message_receiver_ref + "/" + message_push_id, messageTestBody);
+
+            RootRef.updateChildren(messageBodyDetials).addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(ChatActivity.this, "Message Sent Successfully", Toast.LENGTH_SHORT).show();
+                        userMessageInput.setText("");
+                    }
+                    else {
+                        String message = task.getException().getMessage();
+                        Toast.makeText(ChatActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                        userMessageInput.setText("");
+                    }
+
+                }
+            });
+        }
     }
 
     private void DisplayReceiverInfo() {
@@ -90,5 +208,11 @@ public class ChatActivity extends AppCompatActivity {
         SendImageFileButton = (ImageButton) findViewById(R.id.send_image_file_button);
         userMessageInput = (EditText) findViewById(R.id.input_message);
 
+        messageAdapter = new MessageAdapter((messagesList));
+        userMessageList = (RecyclerView) findViewById( (R.id.message_list_users));
+        linearLayoutManager = new LinearLayoutManager(this);
+        userMessageList.setHasFixedSize(true);
+        userMessageList.setLayoutManager(linearLayoutManager);
+        userMessageList.setAdapter(messageAdapter);
     }
 }
