@@ -13,15 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<<<<<<< HEAD
+
         <activity android:name=".ChatActivity"
             android:parentActivityName=".MainActivity">
         </activity>
-=======
+
         <activity android:name=".MyProfileActivity"></activity>
         <activity android:name=".MyPostsActivity" />
-        <activity android:name=".ChatActivity" />
->>>>>>> 196a7ef6d9c18f45b5fffe1e8704705a96d596b0
+
         <activity android:name=".FriendsActivity" />
         <activity android:name=".PersonProfileActivity" />
         <activity
@@ -31,13 +30,11 @@
         <activity
             android:name=".FindFriendsActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".profileActivity" />
         <activity
             android:name=".SettingsActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".ClickPostActivity" />
         <activity android:name=".PostActivity" />
-        <activity android:name="com.example.codingcafe.socialnetwork.PostActivity" />
         <activity android:name=".SetupActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
