@@ -426,7 +426,6 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.nav_friends:
                 SendUsertoFriendsActivity();
-                Toast.makeText(this, "Friend List", Toast.LENGTH_SHORT ).show();
                 break;
 
             case R.id.nav_find_friends:
