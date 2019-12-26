@@ -1,8 +1,11 @@
 package com.my.socialnetwork;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,21 +18,20 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends AppCompatActivity {
-
+public class MyProfileActivity extends AppCompatActivity {
     private TextView userName, userProfName, userStatus, userCountry, userGender,userDOB, userRelation;
     private CircleImageView userProfileImage;
 
     private DatabaseReference profileUserRef;
     private FirebaseAuth mAuth;
-
+    private Button MyPosts, MyFriends;
 
     private String currentUserid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_my_profile);
 
         mAuth = FirebaseAuth.getInstance();
         currentUserid = mAuth.getCurrentUser().getUid();
@@ -44,6 +46,24 @@ public class ProfileActivity extends AppCompatActivity {
         userRelation = (TextView)findViewById(R.id.my_relationship);
         userDOB = (TextView)findViewById(R.id.my_dob);
         userProfileImage = (CircleImageView)findViewById(R.id.my_profile_pic);
+        MyFriends = (Button) findViewById(R.id.my_friends_button);
+        MyPosts = (Button) findViewById(R.id.my_post_button);
+
+        MyFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                SendUsertoFriendsActivity();
+            }
+        });
+
+        MyPosts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                SendUsertoMyPostsActivity();
+            }
+        });
 
         profileUserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -58,7 +78,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String myGender = dataSnapshot.child("gender").getValue().toString();
                     String myRelationStatus = dataSnapshot.child("relationshipstatus").getValue().toString();
 
-                    Picasso.with(ProfileActivity.this).load(myProfileImage).placeholder(R.drawable.profile).into(userProfileImage);
+                    Picasso.with(MyProfileActivity.this).load(myProfileImage).placeholder(R.drawable.profile).into(userProfileImage);
                     userName.setText("@" + myUserName);
                     userProfName.setText(myProfileName);
                     userStatus.setText(myProfileStatus);
@@ -74,5 +94,16 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void SendUsertoFriendsActivity() {
+        Intent settingsIntent =  new Intent(MyProfileActivity.this, FriendsActivity.class);
+        startActivity(settingsIntent);
+    }
+
+    private void SendUsertoMyPostsActivity() {
+        Intent settingsIntent =  new Intent(MyProfileActivity.this, PostActivity.class);
+        startActivity(settingsIntent);
     }
 }

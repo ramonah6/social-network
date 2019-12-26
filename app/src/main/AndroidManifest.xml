@@ -13,9 +13,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<<<<<<< HEAD
         <activity android:name=".ChatActivity"
             android:parentActivityName=".MainActivity">
         </activity>
+=======
+        <activity android:name=".MyProfileActivity"></activity>
+        <activity android:name=".MyPostsActivity" />
+        <activity android:name=".ChatActivity" />
+>>>>>>> 196a7ef6d9c18f45b5fffe1e8704705a96d596b0
         <activity android:name=".FriendsActivity" />
         <activity android:name=".PersonProfileActivity" />
         <activity
