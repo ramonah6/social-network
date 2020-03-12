@@ -196,11 +196,11 @@ public class SetupActivity extends AppCompatActivity {
         {
             Toast.makeText(this,"Please write your username...", Toast.LENGTH_SHORT).show();
         }
-        if(TextUtils.isEmpty(fullname))
+        else if(TextUtils.isEmpty(fullname))
         {
             Toast.makeText(this,"Please write your username...", Toast.LENGTH_SHORT).show();
         }
-        if(TextUtils.isEmpty(country))
+        else if(TextUtils.isEmpty(country))
         {
             Toast.makeText(this,"Please write your username...", Toast.LENGTH_SHORT).show();
         }

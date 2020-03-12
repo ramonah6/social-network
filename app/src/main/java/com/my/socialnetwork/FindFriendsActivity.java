@@ -85,7 +85,11 @@ public class FindFriendsActivity extends AppCompatActivity {
                         list = new ArrayList<FindFriends>();
                         for(DataSnapshot ds: dataSnapshot.getChildren())
                         {
-                            FindFriends ff = new FindFriends(ds.child("profileimage").getValue().toString(),ds.child("fullname").getValue().toString(),ds.child("status").getValue().toString(),ds.getKey());
+                            String img = "";
+                            if(ds.hasChild("profileimage")){
+                                img = ds.child("profileimage").getValue().toString();
+                            }
+                            FindFriends ff = new FindFriends(img,ds.child("fullname").getValue().toString(),ds.child("status").getValue().toString(),ds.getKey());
                             list.add(ff);
                         }
                         AdapterClass adapterClass = new AdapterClass(list, getApplicationContext());

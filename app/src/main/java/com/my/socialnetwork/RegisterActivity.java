@@ -90,13 +90,16 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
-                                SendEmailVerificationMessage();
+//                                SendEmailVerificationMessage();
+                                SendUserToLoginActivity();
                                 loadingBar.dismiss();
+                                mAuth.signOut();
                             }
                             else {
                                 String message = task.getException().getMessage();
                                 Toast.makeText(RegisterActivity.this, "Error Occured: "+ message, Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
+                                mAuth.signOut();
                             }
                         }
                     });

@@ -64,7 +64,10 @@ public class AdapterClass extends RecyclerView.Adapter<AdapterClass.FindFriendsV
 
         public void setProfileimage(Context ctx, String profileiamge) {
             CircleImageView myImage = (CircleImageView) mView.findViewById(R.id.all_users_profile_image);
-            Picasso.with(ctx).load(profileiamge).placeholder(R.drawable.profile).into(myImage);
+            if(profileiamge.length() >= 1)
+                Picasso.with(ctx).load(profileiamge).placeholder(R.drawable.profile).into(myImage);
+            else
+                Picasso.with(ctx).load(R.drawable.profile).into(myImage);
         }
 
         public void setFullname(String fullname) {

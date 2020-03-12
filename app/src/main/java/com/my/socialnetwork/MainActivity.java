@@ -120,9 +120,11 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                     }
-                    else {
-                        Toast.makeText(MainActivity.this,"Profile name do not exists...",Toast.LENGTH_SHORT).show();
-                    }
+
+                    updateUserStatus("online");
+                }
+                else{
+                    SendUsertoSetupActivity();
                 }
             }
 
@@ -237,8 +239,6 @@ public class MainActivity extends AppCompatActivity {
         };
 
         postList.setAdapter(adapter);
-
-        updateUserStatus("online");
     }
 
     public static class PostsViewHolder extends RecyclerView.ViewHolder
